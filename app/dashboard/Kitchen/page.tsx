@@ -5,10 +5,11 @@ import Controlbar from "@/app/components/Controlbar"
 
 export default function Kitchen()
 {
+  const [row, setRow] = useState<number>(1);
     return (
         <div className="min-h-screen p-1">
    <Kheader/>
-   <Controlbar/>
+   <Controlbar row={row} setRow={setRow} />
       <div className="border-2 mt-4 border-teal-700 rounded-md p-4 w-[550px] bg-white">
     
      <div className="flex justify-between text-sm font-sans text-teal-800 ">
