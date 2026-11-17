@@ -1,0 +1,46 @@
+export async function GET() {
+  return Response.json([
+    {
+      id: 743,
+      customer: "Walking Customer",
+      cost: "2000.00$",
+      price: "88.00$",
+      discount: "0.00$",
+      tax: "14.96$",
+      orderType: "Dining",
+      table: "Table One",
+      status: "100%",
+      bookedAt: "02-06-2026 17:42:55",
+      preparedAt: "02-06-2026 17:43:26",
+      completedAt: "02-06-2026 17:44:50",
+    },
+    {
+      id: 744,
+      customer: "John Smith",
+      cost: "150.00$",
+      price: "60.00$",
+      discount: "5.00$",
+      tax: "9.00$",
+      orderType: "TakeAway",
+      table: "-",
+      status: "100%",
+      bookedAt: "03-06-2026 11:20:10",
+      preparedAt: "03-06-2026 11:25:30",
+      completedAt: "03-06-2026 11:30:15",
+    },
+    {
+      id: 745,
+      customer: "Emma Watson",
+      cost: "70.00$",
+      price: "120.00$",
+      discount: "10.00$",
+      tax: "18.00$",
+      orderType: "Dining",
+      table: "Table Three",
+      status: "100%",
+      bookedAt: "04-06-2026 19:10:00",
+      preparedAt: "04-06-2026 19:15:20",
+      completedAt: "04-06-2026 19:35:40",
+    }
+  ]);
+}
