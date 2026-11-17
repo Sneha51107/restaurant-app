@@ -1,7 +1,12 @@
 
 import { useState } from "react";
 
-export default function Controlbar({row,setRow}) {
+type ControlbarProps = {
+  row: number;
+  setRow: (value: number) => void;
+};
+
+export default function Controlbar({ row, setRow }: ControlbarProps) {
 
   return (
 
