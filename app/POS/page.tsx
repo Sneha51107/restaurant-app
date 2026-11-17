@@ -8,7 +8,7 @@ export default function POS()
   const [row, setRow] = useState(5);
   const[notes , setNotes]=useState(false);
   const[search,setSearch]=useState("");
-const addToCart = (name, price, image) => {
+const addToCart = (name: string, price: number, image: string) => {
   setCartItems((prev) => [
     ...prev,
     {
