@@ -4,7 +4,9 @@ import Kheader from "../components/Kheader";
 import Link from "next/link";
 export default function POS()
 {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState<
+  { name: string; price: number; image: string }[]
+>([]);
   const [row, setRow] = useState(5);
   const[notes , setNotes]=useState(false);
   const[search,setSearch]=useState("");
