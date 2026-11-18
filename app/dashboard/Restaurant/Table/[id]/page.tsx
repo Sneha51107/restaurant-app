@@ -11,8 +11,8 @@ type TableItem = {
 };
 
 export default function Table() {
-  const params = useParams();
-  const id = String(params.id);
+  const params = useParams<{ id: string }>();
+  const id = params.id;
 
   const tableData: Record<string, TableItem[]> = {
     "1": [
@@ -45,9 +45,17 @@ export default function Table() {
   );
 
   const totalTables = tables.length;
-  const occupied = tables.filter((t) => t.status === "Occupied").length;
-  const available = tables.filter((t) => t.status === "Available").length;
-  const reserved = tables.filter((t) => t.status === "Reserved").length;
+  const occupied = tables.filter(
+    (t) => t.status === "Occupied"
+  ).length;
+
+  const available = tables.filter(
+    (t) => t.status === "Available"
+  ).length;
+
+  const reserved = tables.filter(
+    (t) => t.status === "Reserved"
+  ).length;
 
   return (
     <div className="p-1">
@@ -69,17 +77,23 @@ export default function Table() {
 
         <div className="bg-white shadow-md rounded p-4 w-50">
           <p className="text-gray-500 text-sm">Occupied</p>
-          <h2 className="text-2xl font-bold text-red-500">{occupied}</h2>
+          <h2 className="text-2xl font-bold text-red-500">
+            {occupied}
+          </h2>
         </div>
 
         <div className="bg-white shadow-md rounded p-4 w-50">
           <p className="text-gray-500 text-sm">Available</p>
-          <h2 className="text-2xl font-bold text-green-500">{available}</h2>
+          <h2 className="text-2xl font-bold text-green-500">
+            {available}
+          </h2>
         </div>
 
         <div className="bg-white shadow-md rounded p-4 w-50">
           <p className="text-gray-500 text-sm">Reserved</p>
-          <h2 className="text-2xl font-bold text-yellow-500">{reserved}</h2>
+          <h2 className="text-2xl font-bold text-yellow-500">
+            {reserved}
+          </h2>
         </div>
       </div>
 
