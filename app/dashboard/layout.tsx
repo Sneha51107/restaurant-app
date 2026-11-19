@@ -11,10 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex h-screen">
-      <Sidebar
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-      />
+     <Sidebar sidebarOpen={sidebarOpen} />
 
       <div className="flex flex-col flex-1">
         <Header setSidebarOpen={setSidebarOpen} />
