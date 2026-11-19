@@ -1,23 +1,53 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
+import type { ApexOptions } from "apexcharts";
 import { LayoutDashboard, RotateCw } from "lucide-react";
 
+type Order = {
+  bookedAt: string;
+  price: string | number;
+  cost: string | number;
+  discount: string | number;
+  tax: string | number;
+};
+
+type Expense = {
+  amount: string | number;
+};
+
+const parseAmount = (value: string | number | undefined) => {
+  return Number(String(value ?? 0).replace(/[$,]/g, "")) || 0;
+};
+
 export default function DashboardPage() {
-  const [orders, setOrders] = useState([]);
-  const [expenses, setExpenses] = useState([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/sales").then((res) => res.json()),
-      fetch("/api/expenses").then((res) => res.json()),
-    ]).then(([salesData, expensesData]) => {
-      setOrders(salesData);
-      setExpenses(expensesData);
-      setLoading(false);
-    });
+      fetch("/api/sales").then((res) => {
+        if (!res.ok) throw new Error("Sales fetch failed");
+        return res.json();
+      }),
+      fetch("/api/expenses").then((res) => {
+        if (!res.ok) throw new Error("Expenses fetch failed");
+        return res.json();
+      }),
+    ])
+      .then(([salesData, expensesData]) => {
+        setOrders(salesData as Order[]);
+        setExpenses(expensesData as Expense[]);
+      })
+      .catch((error) => {
+        console.error("Dashboard data error:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   if (loading) {
@@ -30,49 +60,56 @@ export default function DashboardPage() {
     const dateParts = order.bookedAt.split(" ")[0].split("-");
     const month = Number(dateParts[1]) - 1;
 
-    monthlySales[month] += Number(order.price.replace("$", ""));
+    if (month >= 0 && month < 12) {
+      monthlySales[month] += parseAmount(order.price);
+    }
   });
 
   const totalSales = orders.reduce(
-    (sum, order) => sum + Number(order.price.replace("$", "")),
+    (sum, order) => sum + parseAmount(order.price),
     0
   );
 
   const totalCost = orders.reduce(
-    (sum, order) => sum + Number(order.cost.replace("$", "")),
+    (sum, order) => sum + parseAmount(order.cost),
     0
   );
 
   const totalDiscount = orders.reduce(
-    (sum, order) => sum + Number(order.discount.replace("$", "")),
+    (sum, order) => sum + parseAmount(order.discount),
     0
   );
 
   const totalTax = orders.reduce(
-    (sum, order) => sum + Number(order.tax.replace("$", "")),
+    (sum, order) => sum + parseAmount(order.tax),
     0
   );
 
   const totalExpenses = expenses.reduce(
-    (sum, item) => sum + item.amount,
+    (sum, item) => sum + parseAmount(item.amount),
     0
   );
 
   const totalPayable = totalSales + totalTax - totalDiscount;
 
-  const profit =
-    totalSales - totalCost - totalTax - totalExpenses;
+  const profit = totalSales - totalCost - totalTax - totalExpenses;
 
-  const chartOptions = {
-    chart: { toolbar: { show: false }, zoom: { enabled: false } },
-    stroke: { curve: "straight", width: 2 },
+  const chartOptions: ApexOptions = {
+    chart: {
+      toolbar: { show: false },
+      zoom: { enabled: false },
+    },
+    stroke: {
+      curve: "straight",
+      width: 2,
+    },
     colors: ["#021A70"],
     dataLabels: { enabled: false },
     grid: { borderColor: "#d1d5db" },
     xaxis: {
       categories: [
-        "Jan","Feb","Mar","Apr","May","Jun",
-        "Jul","Aug","Sept","Oct","Nov","Dec",
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sept", "Oct", "Nov", "Dec",
       ],
     },
     yaxis: {
@@ -135,7 +172,12 @@ export default function DashboardPage() {
           Annual Graphic View
         </h1>
 
-        <Chart options={chartOptions} series={chartSeries} type="line" height={300} />
+        <Chart
+          options={chartOptions}
+          series={chartSeries}
+          type="line"
+          height={300}
+        />
       </div>
     </div>
   );
